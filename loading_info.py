@@ -82,6 +82,15 @@ def apply_categorie_changes(dataframe):
             details = row['Details']
             st.session_state.dataframe.at[idx, "Category"] = new_category
             add_keyword_to_category(new_category, details)
+    return None
+
+def add_category_button(new_category, add_button): 
+    if add_button and new_category: 
+            if new_category not in st.session_state.categories: 
+                st.session_state.categories[new_category] = []
+                save_categories()
+                st.rerun()
+    return None
 
 def main():
     st.divider()
@@ -93,13 +102,10 @@ def main():
             new_category_1 = st.text_input('New Category Name')
             add_button_1 = st.button('Add Category')
 
-            st.dataframe(df)
+            edited_df = show_edited_dataframe()
+            apply_categorie_changes(edited_df)
 
-            if add_button_1 and new_category_1: 
-                if new_category_1 not in st.session_state.categories: 
-                    st.session_state.categories[new_category_1] = []
-                    save_categories()
-                    st.rerun()     
+            add_category_button(new_category_1, add_button_1)
 
     else:
         df = st.session_state['dataframe']
@@ -108,11 +114,7 @@ def main():
         new_category = st.text_input('New Category Name')
         add_button = st.button('Add Category')
 
-        if add_button and new_category: 
-            if new_category not in st.session_state.categories: 
-                st.session_state.categories[new_category] = []
-                save_categories()
-                st.rerun()
+        add_category_button(new_category, add_button)
 
         st.subheader('Your Expenses')
         edited_df = show_edited_dataframe()
