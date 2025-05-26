@@ -4,7 +4,6 @@ import plotly as pt
 import numpy as np
 import locale
 
-# Configura o locale para o Brasil
 locale.setlocale(locale.LC_ALL, 'pt_BR.UTF-8')
 
 st.markdown("# Financial Dashboard")
