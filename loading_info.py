@@ -9,6 +9,7 @@ def load_file(file):
     try: 
         df = pd.read_csv(file, delimiter=';')
         df['Amount'] = df['Amount'].str.replace(',', '.').astype(float)
+        df['Date'] = pd.to_datetime(df['Date'], dayfirst=True) 
         st.dataframe(df)
         st.session_state['dataframe'] = df
         return df
