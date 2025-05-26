@@ -45,7 +45,7 @@ venv\Scripts\activate
 3. Install all the Dependencies 
 
 ```bash 
-pip install streamlit pandas numpy plotly numpy 
+pip install streamlit pandas numpy plotly numpy seaborn
 ```
 
 4. Run the app
