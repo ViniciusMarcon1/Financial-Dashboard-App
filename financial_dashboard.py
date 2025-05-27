@@ -7,7 +7,12 @@ import locale
 
 locale.setlocale(locale.LC_ALL, 'pt_BR.UTF-8')
 
-st.markdown("# Financial Dashboard")
+st.markdown("# Financial Dashboard 📈")
+
+def show_sidebar_info():
+    sidebar_title = st.sidebar.markdown("## Financial Dashboard")
+    sidebar_md = st.sidebar.markdown("- Here you can visualize and analyse your financial data with accurary!")
+    return sidebar_title, sidebar_md
 
 def get_sum(dataframe,  start_date, end_date):
     filtered_df = get_interval_dataframe(dataframe, start_date, end_date)
@@ -75,7 +80,6 @@ def main():
             st.dataframe(get_interval_dataframe(df_debit, start_date_debit, end_date_debit))
 
     # Sidebar Info 
-    sidebar_title = st.sidebar.markdown("## Financial Dashboard")
-    sidebar_mds = st.sidebar.markdown("- Here you can visualize and analyse your financial data with accurary!")
+    show_sidebar_info()
 
 main()
