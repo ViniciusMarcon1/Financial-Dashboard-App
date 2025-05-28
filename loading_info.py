@@ -23,7 +23,7 @@ def save_categories():
     with open(category_file, 'w') as f:
         json.dump(st.session_state.categories, f)
 
-def show_sidebar_info():
+def display_sidebar_info():
     sidebar_title = st.sidebar.markdown("## Loading Info")
     sidebar_md = st.sidebar.markdown("- This page is dedicated to uploading your financial data through CSV file format, so we can analyse and display your financial dashboard!")
     return sidebar_title, sidebar_md
@@ -101,7 +101,7 @@ def show_edited_dataframe():
 
 # Call function 'add_keyword_to_category based on button action 
 def apply_categorie_changes(dataframe):
-    save_button = st.button("Apply Changes", type='primary')
+    save_button = st.button("Apply Changes")
     if save_button: 
         # Iterating throw dataframe to apply new category into each transaction 
         for idx, row in dataframe.iterrows():
@@ -115,6 +115,11 @@ def apply_categorie_changes(dataframe):
     return None
 
 
+def list_unique_transactions(dateframe): 
+    set_sample = dateframe['Details'].unique()
+    return set_sample
+
+# Main menu that displays what is seen on screen when runing the app 
 def main():
     st.divider()
     uploaded_file = st.file_uploader('Financial Data CSV file', type=['csv'])
@@ -139,6 +144,6 @@ def main():
         apply_categorie_changes(edited_df)
         
     # Sidebar Info 
-    show_sidebar_info()
+    display_sidebar_info()
 
 main()
