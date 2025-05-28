@@ -7,6 +7,7 @@ from auto_categorize import prompt as genai_prompt
 
 # Title 
 st.markdown("# Loading Financial Info 💵")
+st.markdown('Upload your financial data and let AI automatically categorize everything for you. Want to make changes? No problem! You can easily assign a different category or create a new one—just type it in "Add New Category" and update it directly in the table.')
 
 category_file = 'categories.json'
 
