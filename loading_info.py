@@ -2,9 +2,12 @@ import streamlit as st
 import pandas as pd 
 import os 
 import json 
+from auto_categorize import auto_categorize_func
+from auto_categorize import prompt as genai_prompt
 
 # Title 
 st.markdown("# Loading Financial Info 💵")
+st.markdown('Upload your financial data and let AI automatically categorize everything for you. Want to make changes? No problem! You can easily assign a different category or create a new one—just type it in "Add New Category" and update it directly in the table.')
 
 category_file = 'categories.json'
 
@@ -112,26 +115,52 @@ def apply_categorie_changes(dataframe):
             details = row['Details']
             st.session_state.dataframe.at[idx, "Category"] = new_category
             add_keyword_to_category(new_category, details)
-    return None
 
+    return None
 
 def list_unique_transactions(dateframe): 
     set_sample = dateframe['Details'].unique()
     return set_sample
 
+def clean_genai_response(response): 
+    formated_response = json.loads(response.strip('`').replace('json', ''))
+    return formated_response
+
+def add_ai_categories_and_keywords(response):
+    changed = False
+    for category, keywords in response.items():
+        if category not in st.session_state.categories:
+            st.session_state.categories[category] = keywords
+            changed = True
+    if changed:
+        save_categories()
+
 # Main menu that displays what is seen on screen when runing the app 
 def main():
+
+    # Sidebar Info 
+    display_sidebar_info()
+
     st.divider()
+    
     uploaded_file = st.file_uploader('Financial Data CSV file', type=['csv'])
 
     if 'dataframe' not in st.session_state:
         df = load_file(uploaded_file) 
         if df is not None:
 
+            genai_response = auto_categorize_func(list_unique_transactions(df), genai_prompt)
+            add_ai_categories_and_keywords(clean_genai_response(genai_response))
+
+            df = categorize_transactions(df)
+            st.session_state['dataframe'] = df 
+
             add_category_button()
             st.subheader('Your Expenses')
             edited_df = show_edited_dataframe()
-            apply_categorie_changes(edited_df)           
+
+            apply_categorie_changes(edited_df)
+            
 
     else:
         df = st.session_state['dataframe']
@@ -143,7 +172,5 @@ def main():
         edited_df = show_edited_dataframe()
         apply_categorie_changes(edited_df)
         
-    # Sidebar Info 
-    display_sidebar_info()
 
 main()
