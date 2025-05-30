@@ -48,6 +48,22 @@ def display_mean_amount_category(dataframe, start_date, end_date):
 
     return None 
 
+def diplay_total_amount_per_month(dataframe, start_date, end_date): 
+    filtered_df = filter_dataframe_by_interval(dataframe, start_date, end_date)
+    filtered_df['Month'] = filtered_df['Date'].dt.month
+    grouped_df = filtered_df.groupby('Month').Amount.sum().reset_index()
+    st.area_chart(grouped_df, x='Month', y='Amount', x_label='Month', y_label='Total Amount')
+
+    return None 
+
+def diplay_mean_amount_per_month(dataframe, start_date, end_date): 
+    filtered_df = filter_dataframe_by_interval(dataframe, start_date, end_date)
+    filtered_df['Month'] = filtered_df['Date'].dt.month
+    grouped_df = filtered_df.groupby('Month').Amount.mean().reset_index()
+    st.area_chart(grouped_df, x='Month', y='Amount', x_label='Month', y_label='Mean Amount')
+
+    return None 
+
 def main():
     st.divider()
 
@@ -71,9 +87,17 @@ def main():
 
             sub_col_1, sub_col_2 = st.columns(2)
             with sub_col_1:
+                st.markdown('##### Total Amount By Category')
                 display_total_amount_category(df_credit, start_date_credit, end_date_credit)
+                st.markdown('##### Total Amount By Month')
+                diplay_total_amount_per_month(df_credit, start_date_credit, end_date_credit)
             with sub_col_2:
+                st.markdown('##### Mean Amount By Category')
                 display_mean_amount_category(df_credit, start_date_credit, end_date_credit)
+                st.markdown('##### Mean Amount By Month')
+                diplay_mean_amount_per_month(df_credit, start_date_credit, end_date_credit)
+
+            st.markdown('### Details')
             st.dataframe(filter_dataframe_by_interval(df_credit, start_date_credit, end_date_credit))
         with tab2: 
             col_3, col_4 = st.columns(2)
@@ -87,8 +111,12 @@ def main():
             sub_col_3, sub_col_4 = st.columns(2)
             with sub_col_3:
                 display_total_amount_category(df_debit, start_date_debit, end_date_debit)
+                diplay_total_amount_per_month(df_debit, start_date_debit, end_date_debit)
             with sub_col_4:
                 display_mean_amount_category(df_debit, start_date_debit, end_date_debit)
+                diplay_mean_amount_per_month(df_debit, start_date_debit, end_date_debit)
+
+            st.markdown('### Details')
             st.dataframe(filter_dataframe_by_interval(df_debit, start_date_debit, end_date_debit))
 
     else: 
